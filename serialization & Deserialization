@@ -1,0 +1,62 @@
+package files;
+
+
+import static io.restassured.RestAssured.*;
+
+import java.util.List;
+
+import POJO.Api;
+import POJO.Getcourse;
+import POJO.webAutomation;
+import io.restassured.path.json.JsonPath;
+
+
+
+
+
+public class OAuthTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String response = given().formParam("client-id", "692183103107-p0m7ent2hk7suguv4vq22hjcfhcr43pj.apps.googleusercontent.com")
+				.formParam("client_secret", "erZOWM9g3UtwNRj340YYaK_W")
+				.formParam("grant_type", "client_credentials")
+				.formParam("scope", "trust")
+				.when().log().all().post("https://rahulshettyacademy.com/oauthapi/oauth2/resourceOwner/token").asString();
+
+				System.out.print(response);
+				JsonPath js = new JsonPath(response);
+				String var = js.getString("access_token");
+				System.out.print(var);
+				
+				
+				  // Output as String Format, Storing it in a Variable By Using JSonPath
+				  
+				  String resposne2 = given().queryParam("access_token", var).when().get("https://rahulshettyacademy.com/oauthapi/getCourseDetails").asString();
+				  System.out.print(resposne2);
+				 
+				  //When u get a Json Response Convert to Java Object by Taking the Help of Getcourse.class
+				  //Json data will be going to Getcourse.class and starts Deserialize -> we cann Pull Json data by Using java class Methods(for eg->public String getInstructor()) //De-Serialization
+				 
+				  
+				  Getcourse gc = given().queryParam("access_token",var).when().log().all().get("https://rahulshettyacademy.com/oauthapi/getCourseDetails").as(Getcourse.class);
+				  
+				  System.out.print(gc.getInstructor()); System.out.print(gc.getLinkedIn());
+				  System.out.print(gc.getCourses().getApi().get(1).getCoursetitle());
+				  
+				  List<Api> apiCourses = gc.getCourses().getApi(); for(int
+				  i=0;i<apiCourses.size();i++) { if(apiCourses.get(i).getCoursetitle().
+				  equalsIgnoreCase("SoapUI Webservices testing")) {
+				  System.out.println(apiCourses.get(i).getPrice()); } }
+				  
+				  List<webAutomation> webAutomationDetails = gc.getCourses().getwebAutomation(); 
+				  for(int j=0;j<webAutomationDetails.size();j++)
+				  {
+				  System.out.println(webAutomationDetails.get(j).getCoursetitle());
+				  }
+				 
+						
+				
+					}
+
+}
