@@ -1,0 +1,184 @@
+//Serialization 
+package demo;
+
+import static io.restassured.RestAssured.given;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.path.json.JsonPath;
+import pojo.AddPlace;
+import pojo.Location;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.testng.Assert;
+import pojo.Api;
+import pojo.GetCourse;
+
+public class SerializeTest {
+    public static void main(String[] args) {
+        // Set base URI
+        RestAssured.baseURI = "https://rahulshettyacademy.com";
+
+        // Create AddPlace object and set values
+        AddPlace place = new AddPlace();
+        place.setAccuracy(50);
+        place.setAddress("29, side layout, cohen 09");
+        place.setLanguage("French-IN");
+        place.setPhone_number("(+91) 983 893 3937");
+        place.setWebsite("https://rahulshettyacademy.com");
+        place.setName("Frontline house");
+        
+        List<String> types = new ArrayList<>(Arrays.asList("shoe park", "shop"));
+        place.setTypes(types);
+        
+        Location location = new Location();
+        location.setLat(-38.383494);
+        location.setLng(33.427362);
+        place.setLocation(location);
+
+        // Send POST request
+        Response response = given().log().all()
+                .queryParam("key", "qaclick123")
+                .body(place)
+                .when().post("/maps/api/place/add/json")
+                .then().assertThat().statusCode(200)
+                .extract().response();
+
+        String responseString = response.asString();
+        System.out.println(responseString);
+
+       
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-
+POJO Class
+
+package pojo;
+
+import java.util.List;
+
+public class AddPlace {
+    private int accuracy;
+    private String name;
+    private String phoneNumber;
+    private String address;
+    private String website;
+    private String language;
+    private Location location;
+    private List<String> types;
+
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(int accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public List<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<String> types) {
+        this.types = types;
+    }
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Convert the java Objets to JSON -
+//Create 1 java obj and set all the setters give back to Rest Assured code it will convert to JSON to SUbmit to the API
+
+package demo; 
+import static io.restassured.RestAssured.given; 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List; import org.testng.Assert;
+import io.restassured.path.json.JsonPath; 
+import pojo.Api; import pojo.GetCourse;
+public class oAuthTest{
+  public static void main(String[] args) { 
+    // TODO Auto-generated method stub 
+    String[] courseTitles = {"Selenium Webdriver Java","Cypress","Protractor"}; 
+String response = given() .formParams("client_id","692183103107-p0m7ent2hk7suguv4vq22hjcfhcr43pj.apps.googleusercontent.com")
+.formParams("client_secret","erZOWM9g3UtwNRj340YYaK_W")
+.formParams("grant_type","client_credentials")
+.formParams("scope","trust") .when().log().all() 
+.post("https://rahulshettyacademy.com/oauthapi/oauth2/resourceOwner/token").asString();
+
+System.out.println(response);
+
+JsonPath jsonPath = new JsonPath(response);
+String accessToken = jsonPath.getString("access_token");
+
+GetCourse gc= given() .queryParams("access_token", accessToken) .when().log().all()
+.get("https://rahulshettyacademy.com/oauthapi/getCourseDetails").as(GetCourse.class);
+
+System.out.println(gc.getLinkedIn()); System.out.println(gc.getInstructor());
+System.out.println(gc.getCourses().getApi().get(1).getCourseTitle());
+List<Api> apiCourses=gc.getCourses().getApi();
+
+for(int i=0;i<apiCourses.size();i++) {
+  if(apiCourses.get(i).getCourseTitle().equalsIgnoreCase("SoapUI Webservices testing"))
+{ 
+  System.out.println(apiCourses.get(i).getPrice());
+} 
+} 
+//Get the course names of WebAutomation
+ArrayList<String> a= new ArrayList<String>();
+List<pojo.WebAutomation> w=gc.getCourses().getWebAutomation();
+for(int j=0;j<w.size();j++) {
+  a.add(w.get(j).getCourseTitle());
+} 
+List<String> expectedList= Arrays.asList(courseTitles);
+Assert.assertTrue(a.equals(expectedList)); 
+} 
+}
