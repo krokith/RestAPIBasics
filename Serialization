@@ -33,7 +33,7 @@ JSON - Sample Body :
 
 
 
-// we need to send this JSON to API to get a  Response like Below 
+// we need to send Above JSON to API to get a  Response like Below 
 Sample Response
 {
   "status": "OK",
@@ -42,6 +42,122 @@ Sample Response
   "reference": "736f3c9bec384af62a184a1936d42bb0736f3c9bec384af62a184a1936d42bb0",
   "id": "736f3c9bec384af62a184a1936d42bb0"
 }
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-//Create 1 java obj and set all the setters give back to Rest Assured code it will convert to JSON to SUbmit to the API
+
+
+
+POJO Class
+
+package pojo;
+
+import java.util.List;
+
+public class AddPlace {
+    private int accuracy;
+    private String name;
+    private String phoneNumber;
+    private String address;
+    private String website;
+    private String language;
+    private Location location;
+    private List<String> types; -> return ttype -> List of STrings so we didnt create a new class here instead we made a List 
+
+
+//for above all the Variables we are creating getters and setters except for Location and Types -> because Types is a array[] and location has 2 json files inside , so created a separate class so retunr type would not be String here
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(int accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public Location getLocation() {  // return type is not String its the class itself->we have created a Sub class for Location with Lat and Long Variables
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public List<String> getTypes() {             // return type is not String its the class itself 
+        return types;
+    }
+
+    public void setTypes(List<String> types) {  
+        this.types = types;
+    }
+}
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+package POJO;
+
+public class Location {
+	private double lat;
+	public double getLat() {
+		return lat;
+	}
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+	public double getLng() {
+		return lng;
+	}
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+	private double lng;
+
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 package demo;
@@ -96,87 +212,7 @@ public class SerializeTest {
 
        
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--//Create 1 java obj and set all the setters give back to Rest Assured code it will convert to JSON to SUbmit to the API
-POJO Class
 
-package pojo;
-
-import java.util.List;
-
-public class AddPlace {
-    private int accuracy;
-    private String name;
-    private String phoneNumber;
-    private String address;
-    private String website;
-    private String language;
-    private Location location;
-    private List<String> types;
-
-    public int getAccuracy() {
-        return accuracy;
-    }
-
-    public void setAccuracy(int accuracy) {
-        this.accuracy = accuracy;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public List<String> getTypes() {
-        return types;
-    }
-
-    public void setTypes(List<String> types) {
-        this.types = types;
-    }
-}
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
